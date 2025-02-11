@@ -1,2 +1,2 @@
 # json-fleece
-Exstensible JSON Schemas for Haskell
+Extensible JSON Schemas for Haskell
