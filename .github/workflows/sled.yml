@@ -1,0 +1,36 @@
+name: SLED
+
+on:
+  schedule:
+    # Twice a month, every ~two weeks
+    - cron: "0 0 01 * *"
+    - cron: "0 0 15 * *"
+
+  pull_request:
+    paths:
+      - .github/workflows/sled.yml
+
+jobs:
+  auto-fix-stack-yaml:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./
+        with:
+          arguments: --fix --no-exit
+
+      # Use a token to ensure CI runs on the created PR
+      - id: token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.FRECKLE_AUTOMATION_APP_ID }}
+          private-key: ${{ secrets.FRECKLE_AUTOMATION_PRIVATE_KEY }}
+
+      - uses: peter-evans/create-pull-request@v7
+        with:
+          branch: sled/auto-fix
+          title: "Auto-fix stack.yaml"
+          base: ${{ github.event.name == 'pull_request' && github.event.pull_request.head.ref || 'main' }}
+          token: ${{ steps.token.outputs.token }}
+
