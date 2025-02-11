@@ -10,7 +10,7 @@ defaults:
 jobs:
   build:
     name: Build and Test
-    runs-on: [self-hosted, linux, x64]
+    runs-on: [linux, x64]
 
     steps:
       - name: Checkout
