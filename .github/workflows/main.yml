@@ -1,36 +1,13 @@
-name: Build and Test
-
-on:
-  push:
-
-defaults:
-  run:
-    shell: bash
-
+on: [push]
+name: build
 jobs:
-  build:
-    name: Build and Test
+  stack-test:
+    name: Stack test
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Cache
-        uses: actions/cache@v4
-        env:
-          cache-version: v1
+      - uses: actions/checkout@v4
+      - uses: haskell-actions/setup@v2
         with:
-          key: ${{ env.cache-version }}-${{ hashFiles('stack*.yaml') }}-${{ hashFiles('package.yaml') }}
-          restore-keys: |
-            ${{ env.cache-version }}-
-          path: |
-            ./stack-root
-
-      - name: Build and test
-        run: |
-          set -e
-          mkdir -p ./stack-root
-          echo "PROJECT_DIR=$PWD" >> .env
-          mv compose.override.github.yml compose.override.yml
-          ./scripts/build
+          enable-stack: true
+          stack-version: 'latest'
+      - run: stack test json-fleece-aeson
