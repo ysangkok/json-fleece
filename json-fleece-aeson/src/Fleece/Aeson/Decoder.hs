@@ -1,4 +1,5 @@
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE InstanceSigs #-}
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE ScopedTypeVariables #-}
@@ -36,6 +37,7 @@ import qualified Fleece.Core as FC
 
 data Decoder a
   = Decoder FC.Name (Aeson.Value -> AesonTypes.Parser a)
+  deriving Functor
 
 fromLazyText :: Decoder a -> TL.Text -> Either String a
 fromLazyText decoder =
